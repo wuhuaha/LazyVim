@@ -64,7 +64,7 @@ require("lazy").setup({
   },
   -- Windows + SSH 下并发过高时容易出现一批 git clone 卡住，先保守一点。
   concurrency = 1,
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "vscode", "habamax" } },
   checker = {
     enabled = true,
     notify = false,
