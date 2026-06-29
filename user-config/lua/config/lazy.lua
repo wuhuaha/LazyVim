@@ -5,8 +5,16 @@
 -- 2. 显式导入 Go / Python / C++ 等 extras，启动后由 lazy.nvim 和 Mason 按需安装依赖。
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local use_ssh_for_github = vim.fn.executable("ssh") == 1 and vim.env.LAZYVIM_GITHUB_USE_HTTPS ~= "1"
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  -- 这台机器访问 GitHub HTTPS 不稳定，所以默认优先走 SSH。
+  -- 如果其他机器没有配置 SSH key，可在启动前设置：
+  --   set LAZYVIM_GITHUB_USE_HTTPS=1
+  -- 然后这里会自动回退到 HTTPS。
+  local lazyrepo = use_ssh_for_github
+      and "git@github.com:folke/lazy.nvim.git"
+    or "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
@@ -27,6 +35,8 @@ vim.g.maplocalleader = "\\"
 -- Python 默认用 pyright + ruff。后续如果想更严格，可以把 pyright 改成 basedpyright。
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_python_ruff = "ruff"
+-- 当前系统是 Neovim 0.11.x，blink.cmp v2 需要 0.12+，因此先显式使用 nvim-cmp。
+vim.g.lazyvim_cmp = "nvim-cmp"
 
 require("lazy").setup({
   spec = {
@@ -38,6 +48,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.go" },
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.lang.clangd" },
+    { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
 
     -- 调试、测试和大纲。语言 extras 会补充各自的 adapter。
     { import = "lazyvim.plugins.extras.dap.core" },
@@ -51,15 +62,18 @@ require("lazy").setup({
     lazy = false,
     version = false,
   },
+  -- Windows + SSH 下并发过高时容易出现一批 git clone 卡住，先保守一点。
+  concurrency = 1,
   install = { colorscheme = { "tokyonight", "habamax" } },
   checker = {
     enabled = true,
     notify = false,
   },
   git = {
-    -- 当前机器 GitHub HTTPS 不稳定，而 SSH 已验证可用。
-    -- 如果你在其他机器没有配 SSH key，可以删掉这一段，lazy.nvim 会回到 HTTPS。
-    url_format = "git@github.com:%s.git",
+    -- 这台机器访问 GitHub HTTPS 不稳定，所以插件仓库默认优先走 SSH。
+    -- 如果其他机器没有配置 SSH key，可在启动前设置：
+    --   set LAZYVIM_GITHUB_USE_HTTPS=1
+    url_format = use_ssh_for_github and "git@github.com:%s.git" or "https://github.com/%s.git",
   },
   performance = {
     rtp = {
