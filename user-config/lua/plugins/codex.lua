@@ -10,16 +10,28 @@ return {
       {
         "<leader>ac",
         function()
-          Snacks.terminal("codex", { cwd = LazyVim.root() })
+          Snacks.terminal("codex", {
+            cwd = LazyVim.root(),
+            win = {
+              position = "right",
+              width = 0.42,
+            },
+          })
         end,
-        desc = "Codex CLI：项目根目录",
+        desc = "右侧终端：Codex CLI（项目根目录）",
       },
       {
         "<leader>aC",
         function()
-          Snacks.terminal("codex", { cwd = vim.uv.cwd() })
+          Snacks.terminal("codex", {
+            cwd = vim.uv.cwd(),
+            win = {
+              position = "right",
+              width = 0.42,
+            },
+          })
         end,
-        desc = "Codex CLI：当前目录",
+        desc = "右侧终端：Codex CLI（当前目录）",
       },
     },
   },

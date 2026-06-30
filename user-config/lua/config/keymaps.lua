@@ -6,6 +6,20 @@
 -- - 不确定某个键位时，先按 <leader> 等 which-key 弹出提示。
 
 local map = vim.keymap.set
+local function open_trouble_calls(mode, title)
+  require("trouble").open({
+    mode = mode,
+    focus = false,
+    pinned = true,
+    follow = true,
+    win = {
+      type = "split",
+      position = "bottom",
+      size = 12,
+    },
+  })
+  vim.notify(title, vim.log.levels.INFO, { title = "调用关系" })
+end
 
 -- 保存、退出、重载。
 map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "保存文件" })
@@ -28,10 +42,16 @@ map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "上一个 buffer" })
 
 -- 代码跳转和调用层级。
 -- gd/gr/gI/gy 是 LazyVim 默认键位；下面补充更容易记的 <leader>c*。
-map("n", "<leader>ci", vim.lsp.buf.incoming_calls, { desc = "调用我：Incoming calls" })
-map("n", "<leader>co", vim.lsp.buf.outgoing_calls, { desc = "我调用：Outgoing calls" })
+map("n", "<leader>ci", function()
+  open_trouble_calls("lsp_incoming_calls", "底部打开 Incoming Calls")
+end, { desc = "底部面板：谁在调用我" })
+map("n", "<leader>co", function()
+  open_trouble_calls("lsp_outgoing_calls", "底部打开 Outgoing Calls")
+end, { desc = "底部面板：我调用了谁" })
 map("n", "<leader>cr", vim.lsp.buf.references, { desc = "查找引用" })
 map("n", "<leader>cd", vim.lsp.buf.definition, { desc = "跳到定义" })
+map("n", "<leader>cp", "<cmd>Trouble diagnostics toggle focus=false win.position=bottom win.size=10<cr>", { desc = "底部面板：问题列表" })
+map("n", "<leader>cq", "<cmd>Trouble qflist toggle focus=false win.position=bottom win.size=10<cr>", { desc = "底部面板：Quickfix" })
 
 -- 大纲和符号。
 map("n", "<leader>cs", "<cmd>AerialToggle<cr>", { desc = "打开/关闭代码大纲" })
@@ -42,11 +62,41 @@ map("n", "<leader>sS", function()
   Snacks.picker.lsp_workspace_symbols({ filter = LazyVim.config.kind_filter })
 end, { desc = "工作区符号" })
 
--- Codex CLI：在项目根目录打开浮动终端并运行 codex。
--- 如果你的 codex 不在 PATH 中，先在系统终端确认 `codex --version` 可用。
+-- 终端 / Codex CLI。
+map({ "n", "t" }, "<leader>tt", function()
+  Snacks.terminal(nil, {
+    cwd = LazyVim.root(),
+    win = {
+      position = "right",
+      width = 0.42,
+    },
+  })
+end, { desc = "右侧终端：项目根目录" })
+map({ "n", "t" }, "<leader>tT", function()
+  Snacks.terminal(nil, {
+    cwd = vim.uv.cwd(),
+    win = {
+      position = "right",
+      width = 0.42,
+    },
+  })
+end, { desc = "右侧终端：当前目录" })
+
 map("n", "<leader>ac", function()
-  Snacks.terminal("codex", { cwd = LazyVim.root() })
-end, { desc = "Codex CLI：项目根目录" })
+  Snacks.terminal("codex", {
+    cwd = LazyVim.root(),
+    win = {
+      position = "right",
+      width = 0.42,
+    },
+  })
+end, { desc = "右侧终端：Codex CLI（项目根目录）" })
 map("n", "<leader>aC", function()
-  Snacks.terminal("codex", { cwd = vim.uv.cwd() })
-end, { desc = "Codex CLI：当前目录" })
+  Snacks.terminal("codex", {
+    cwd = vim.uv.cwd(),
+    win = {
+      position = "right",
+      width = 0.42,
+    },
+  })
+end, { desc = "右侧终端：Codex CLI（当前目录）" })

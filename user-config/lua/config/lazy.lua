@@ -45,6 +45,8 @@ require("lazy").setup({
 
     -- 常用语言：只写配置，不把二进制依赖提交进仓库。
     -- 第一次打开对应项目时，Mason 会安装 gopls、pyright、ruff、clangd 等工具。
+    { import = "lazyvim.plugins.extras.ui.edgy" },
+    { import = "lazyvim.plugins.extras.editor.neo-tree" },
     { import = "lazyvim.plugins.extras.lang.go" },
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.lang.clangd" },
