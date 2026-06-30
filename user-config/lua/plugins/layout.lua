@@ -2,8 +2,8 @@
 --
 -- 目标是尽量靠近 VS Code：
 -- - 左侧固定目录树
--- - 底部固定问题 / 调用关系 / quickfix 面板
--- - 右侧固定终端和大纲
+-- - 底部固定问题 / 调用关系 / quickfix / 终端
+-- - 右侧保留大纲等窄信息栏
 
 return {
   {
@@ -19,14 +19,14 @@ return {
         pinned = false,
       })
 
-      table.insert(opts.right, {
+      table.insert(opts.bottom, {
         ft = "snacks_terminal",
         title = "%{b:snacks_terminal.id}: %{b:term_title}",
-        size = { width = 0.42 },
+        size = { height = 0.28 },
         pinned = false,
         filter = function(_buf, win)
           return vim.w[win].snacks_win
-            and vim.w[win].snacks_win.position == "right"
+            and vim.w[win].snacks_win.position == "bottom"
             and vim.w[win].snacks_win.relative == "editor"
             and not vim.w[win].trouble_preview
         end,

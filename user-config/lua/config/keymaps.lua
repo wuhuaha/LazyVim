@@ -67,36 +67,36 @@ map({ "n", "t" }, "<leader>tt", function()
   Snacks.terminal(nil, {
     cwd = LazyVim.root(),
     win = {
-      position = "right",
-      width = 0.42,
+      position = "bottom",
+      height = 0.28,
     },
   })
-end, { desc = "右侧终端：项目根目录" })
+end, { desc = "底部终端：项目根目录" })
 map({ "n", "t" }, "<leader>tT", function()
   Snacks.terminal(nil, {
     cwd = vim.uv.cwd(),
     win = {
-      position = "right",
-      width = 0.42,
+      position = "bottom",
+      height = 0.28,
     },
   })
-end, { desc = "右侧终端：当前目录" })
+end, { desc = "底部终端：当前目录" })
 
 map("n", "<leader>ac", function()
   Snacks.terminal("codex", {
     cwd = LazyVim.root(),
     win = {
-      position = "right",
-      width = 0.42,
+      position = "bottom",
+      height = 0.30,
     },
   })
-end, { desc = "右侧终端：Codex CLI（项目根目录）" })
+end, { desc = "底部终端：Codex CLI（项目根目录）" })
 map("n", "<leader>aC", function()
   Snacks.terminal("codex", {
     cwd = vim.uv.cwd(),
     win = {
-      position = "right",
-      width = 0.42,
+      position = "bottom",
+      height = 0.30,
     },
   })
-end, { desc = "右侧终端：Codex CLI（当前目录）" })
+end, { desc = "底部终端：Codex CLI（当前目录）" })

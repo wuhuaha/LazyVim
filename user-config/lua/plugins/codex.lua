@@ -13,12 +13,12 @@ return {
           Snacks.terminal("codex", {
             cwd = LazyVim.root(),
             win = {
-              position = "right",
-              width = 0.42,
+              position = "bottom",
+              height = 0.30,
             },
           })
         end,
-        desc = "右侧终端：Codex CLI（项目根目录）",
+        desc = "底部终端：Codex CLI（项目根目录）",
       },
       {
         "<leader>aC",
@@ -26,12 +26,12 @@ return {
           Snacks.terminal("codex", {
             cwd = vim.uv.cwd(),
             win = {
-              position = "right",
-              width = 0.42,
+              position = "bottom",
+              height = 0.30,
             },
           })
         end,
-        desc = "右侧终端：Codex CLI（当前目录）",
+        desc = "底部终端：Codex CLI（当前目录）",
       },
     },
   },
