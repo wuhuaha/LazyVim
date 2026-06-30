@@ -24,6 +24,18 @@ return {
         "clang-format",
         "codelldb",
       })
+
+      -- Go / Python / C++ extras 自己也会往 ensure_installed 里追加工具。
+      -- 这里做一次去重，避免 mason 在同一轮启动里对同一个包重复调用 install，
+      -- 从而触发 "Package is already installing"。
+      local seen = {}
+      opts.ensure_installed = vim.tbl_filter(function(tool)
+        if seen[tool] then
+          return false
+        end
+        seen[tool] = true
+        return true
+      end, opts.ensure_installed)
     end,
   },
   {
